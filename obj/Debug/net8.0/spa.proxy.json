@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "",
+"RedirectUrl": "",
+"LaunchCommand": "",
+"WorkingDirectory": "F:\\VS_APIs\\APIs_Faundamentals\\APIs_Faundamentals",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}
