@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App-Consummer", "App-Consummer\App-Consummer.csproj", "{93FA5700-DC0F-438E-8F6E-2A4BA4937711}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{93FA5700-DC0F-438E-8F6E-2A4BA4937711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93FA5700-DC0F-438E-8F6E-2A4BA4937711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93FA5700-DC0F-438E-8F6E-2A4BA4937711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93FA5700-DC0F-438E-8F6E-2A4BA4937711}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {33BA3EC1-C774-4543-86CE-AB6BF58FFC7D}
+	EndGlobalSection
+EndGlobal
