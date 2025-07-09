@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>APIs_Faundamentals</name>
+    </assembly>
+    <members>
+        <member name="M:APIs_Faundamentals.Controllers.EmployeeController.Get(System.Int32)">
+            <summary>
+            get specific employee by SSN  
+            </summary>
+            <param name="SSN">Employee SSN</param>
+            <returns>Specific Employee</returns>
+            <remarks>
+            request example:
+            api/Employee/102660
+            </remarks>
+        </member>
+    </members>
+</doc>

@@ -17,6 +17,7 @@ namespace APIs_Faundamentals.Controllers
         }
 
         [HttpGet]
+ 
         public ActionResult<List<EmployeeDTO>> GetAll()
         {
             List<Employee> employees = _context.Employees.ToList();
@@ -46,7 +47,21 @@ namespace APIs_Faundamentals.Controllers
         //}
 
 
-        [HttpGet("{SSN}")]   
+        ///<summary>
+        ///get specific employee by SSN  
+        ///</summary>
+        ///<param name="SSN">Employee SSN</param>
+        ///<returns>Specific Employee</returns>
+        ///<remarks>
+        ///request example:
+        ///api/Employee/102660
+        ///</remarks>
+        
+      
+        
+        [HttpGet("{SSN}")]
+        [ProducesResponseType<EmployeeDTO>(200)]
+        [ProducesResponseType(404)]  // NotFound
         public ActionResult Get(int SSN)   // ActionResult allow to return Statuse code cases
         {
 
