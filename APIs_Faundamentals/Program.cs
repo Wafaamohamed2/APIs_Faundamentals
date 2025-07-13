@@ -1,5 +1,8 @@
 
+using APIs_Faundamentals.Models;
+using APIs_Faundamentals.Repository;
 using Microsoft.EntityFrameworkCore;
+using APIs_Faundamentals.UnitOfWork;
 
 namespace APIs_Faundamentals
 {
@@ -50,14 +53,29 @@ namespace APIs_Faundamentals
                                       .AllowAnyHeader());
             });
 
+            // Register the EmployeeRepos service for dependency injection
+           // builder.Services.AddScoped<Repository.EmployeeRepos>();
+
+            // Register the EmployeeRepos service with the interface IEmployeeRepos for dependency injection
+            //builder.Services.AddScoped<IEmployeeRepos,EmployeeRepos>();
+
+
+            // Register the GenericRepos service for dependency injection
+            //builder.Services.AddScoped<GenericRepos<Employee>>();
+            //builder.Services.AddScoped<GenericRepos<Department>>();
+
+
+            // Register the UnitWork service for dependency injection
+            builder.Services.AddScoped<UnitWork>();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                //app.UseSwagger();
-                app.MapSwagger().RequireAuthorization(op => op.RequireRole("admin"));
+               app.UseSwagger();
+
+               //  app.MapSwagger().RequireAuthorization(op => op.RequireRole("admin"));   used for require authorization for Swagger UI
                 app.UseSwaggerUI();
             }
 

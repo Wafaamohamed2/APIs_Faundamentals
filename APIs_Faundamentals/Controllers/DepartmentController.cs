@@ -2,6 +2,7 @@
 using APIs_Faundamentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using APIs_Faundamentals.Repository;
 
 namespace APIs_Faundamentals.Controllers
 {
@@ -9,16 +10,16 @@ namespace APIs_Faundamentals.Controllers
     [ApiController]
     public class DepartmentController : ControllerBase
     {
-        public Models.PracticContext _context;
-        public DepartmentController(PracticContext context )
+        GenericRepos<Department> GenericRepos;    
+        public DepartmentController(GenericRepos<Department> genericRepos )
         {
-           _context = context;
+           GenericRepos = genericRepos;
         }
 
         [HttpGet("{id}")]
         public ActionResult Get(int id )
         {
-            Department department = _context.Departments.Find(id);
+            Department department = GenericRepos.SelectById(id);
 
             if (department == null)
             {
@@ -48,7 +49,7 @@ namespace APIs_Faundamentals.Controllers
 
         public ActionResult<List<DepartmentDTO>> GetAll()
         {
-            List<Department> departments = _context.Departments.ToList();
+            List<Department> departments = GenericRepos.SelectAll();
             List<DepartmentDTO> departmentsDTO = new List<DepartmentDTO>();
 
             foreach (var d in departments)

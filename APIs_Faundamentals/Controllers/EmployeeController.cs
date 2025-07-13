@@ -2,6 +2,8 @@
 using APIs_Faundamentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using APIs_Faundamentals.Repository;
 
 namespace APIs_Faundamentals.Controllers
 {
@@ -9,18 +11,19 @@ namespace APIs_Faundamentals.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        // IEmployeeRepos _employeeRepos;  // dependence inversion principle, to avoid tight coupling with the repository
 
-        PracticContext _context;
-        public EmployeeController(PracticContext context)  // Constructor Dependency Injection
+        GenericRepos<Employee> GenericRepos;
+        public EmployeeController(GenericRepos<Employee> GenericRepos)   // Constructor Dependency Injection
         {
-            _context = context;
+            GenericRepos = GenericRepos;
         }
 
         [HttpGet]
  
         public ActionResult<List<EmployeeDTO>> GetAll()
         {
-            List<Employee> employees = _context.Employees.ToList();
+            List<Employee> employees = GenericRepos.SelectAll(); // Get all employees from the repository
             List<EmployeeDTO> employeesDTO = new List<EmployeeDTO>();
 
             foreach (var e in employees)
@@ -65,7 +68,7 @@ namespace APIs_Faundamentals.Controllers
         public ActionResult Get(int SSN)   // ActionResult allow to return Statuse code cases
         {
 
-           Employee employee=  _context.Employees.Find(SSN);
+           Employee employee=  GenericRepos.SelectById(SSN);  // Get specific employee by SSN from the repository
             if (employee == null)
             {
                 return NotFound();
@@ -81,6 +84,7 @@ namespace APIs_Faundamentals.Controllers
                     Address = employee.Address,
                     DeparetmentName = employee.DnoNavigation?.Dname ?? "No Department"
                 };
+
                 return Ok(employeeDTO);  // 200 OK
             }
                
@@ -93,8 +97,9 @@ namespace APIs_Faundamentals.Controllers
 
             if (e == null) { return BadRequest(); }
             if (!ModelState.IsValid) { return BadRequest(); }
-            _context.Employees.Add(e);
-            _context.SaveChanges();
+            GenericRepos.Add(e);// Add new employee to the repository
+            GenericRepos.Save();  
+            
 
             //return Created("ayhaga",e);  it location is "ayhaga"
             return CreatedAtAction(nameof(Get), new { SSN = e.SSN },e);  // frist 2 parmeters to create the IRL so ots location is "https://localhost:7163/api/Employee/5544"
@@ -107,19 +112,17 @@ namespace APIs_Faundamentals.Controllers
             if (!ModelState.IsValid) { return BadRequest(); }
             if (e == null) { return BadRequest(); }
             if (e.SSN != SSN ) { return BadRequest(); }
-            _context.Employees.Update(e); _context.SaveChanges();
-            
+            GenericRepos.Update(e); // Update existing employee in the repository
+             GenericRepos.Save();  
             return NoContent();
         }
 
         [HttpDelete("{SSN}")]
         public ActionResult Delete(int SSN) {
            
-            Employee e = _context.Employees.Find(SSN);
-            if (e == null) { return NotFound(); }
-
-            _context.SaveChanges();
-            return Ok(e);
+         GenericRepos.Delete(SSN);  // Delete employee by SSN from the repository
+            GenericRepos.Save();
+            return NoContent();  // 204 No Content
         }
     }
 }
