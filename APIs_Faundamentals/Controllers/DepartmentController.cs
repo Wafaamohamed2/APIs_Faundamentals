@@ -3,6 +3,7 @@ using APIs_Faundamentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using APIs_Faundamentals.Repository;
+using APIs_Faundamentals.UnitOfWork;
 
 namespace APIs_Faundamentals.Controllers
 {
@@ -10,16 +11,25 @@ namespace APIs_Faundamentals.Controllers
     [ApiController]
     public class DepartmentController : ControllerBase
     {
-        GenericRepos<Department> GenericRepos;    
-        public DepartmentController(GenericRepos<Department> genericRepos )
+        //GenericRepos<Department> GenericRepos;    
+        //public DepartmentController(GenericRepos<Department> genericRepos )
+        //{
+        //   GenericRepos = genericRepos;
+        //}
+
+
+        UnitWork _unit; // Unit of Work to manage repositories and transactions
+        public DepartmentController(UnitWork unit)
         {
-           GenericRepos = genericRepos;
+            _unit = unit;
         }
 
         [HttpGet("{id}")]
         public ActionResult Get(int id )
         {
-            Department department = GenericRepos.SelectById(id);
+            //Department department = GenericRepos.SelectById(id);
+
+            Department department = _unit.DepartmentRepository.SelectById(id);
 
             if (department == null)
             {
@@ -49,7 +59,9 @@ namespace APIs_Faundamentals.Controllers
 
         public ActionResult<List<DepartmentDTO>> GetAll()
         {
-            List<Department> departments = GenericRepos.SelectAll();
+            //List<Department> departments = GenericRepos.SelectAll();
+
+            List<Department> departments = _unit.DepartmentRepository.SelectAll();  
             List<DepartmentDTO> departmentsDTO = new List<DepartmentDTO>();
 
             foreach (var d in departments)

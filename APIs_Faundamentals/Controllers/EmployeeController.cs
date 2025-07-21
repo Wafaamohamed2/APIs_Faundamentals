@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using APIs_Faundamentals.Repository;
+using APIs_Faundamentals.UnitOfWork;
 
 namespace APIs_Faundamentals.Controllers
 {
@@ -11,19 +12,26 @@ namespace APIs_Faundamentals.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        // IEmployeeRepos _employeeRepos;  // dependence inversion principle, to avoid tight coupling with the repository
+        //IEmployeeRepos _employeeRepos;  // dependence inversion principle, to avoid tight coupling with the repository
+        //GenericRepos<Employee> GenericRepos;
+        //public EmployeeController(GenericRepos<Employee> GenericRepos)  
+        //{
+        //   GenericRepos = GenericRepos;
+        //}
 
-        GenericRepos<Employee> GenericRepos;
-        public EmployeeController(GenericRepos<Employee> GenericRepos)   // Constructor Dependency Injection
+
+        UnitWork _unit; // Unit of Work to manage repositories and transactions
+
+        public EmployeeController(UnitWork unit)
         {
-            GenericRepos = GenericRepos;
+            _unit = unit;   
         }
 
         [HttpGet]
  
         public ActionResult<List<EmployeeDTO>> GetAll()
         {
-            List<Employee> employees = GenericRepos.SelectAll(); // Get all employees from the repository
+            List<Employee> employees = _unit._employeerepo.SelectAll(); // Get all employees from the repository
             List<EmployeeDTO> employeesDTO = new List<EmployeeDTO>();
 
             foreach (var e in employees)
@@ -68,7 +76,9 @@ namespace APIs_Faundamentals.Controllers
         public ActionResult Get(int SSN)   // ActionResult allow to return Statuse code cases
         {
 
-           Employee employee=  GenericRepos.SelectById(SSN);  // Get specific employee by SSN from the repository
+         /*  Employee employee=  GenericRepos.SelectById(SSN);*/  // Get specific employee by SSN from the repository
+
+            Employee employee = _unit._employeerepo.SelectById(SSN);  // Get specific employee by SSN from the repository
             if (employee == null)
             {
                 return NotFound();
@@ -97,9 +107,12 @@ namespace APIs_Faundamentals.Controllers
 
             if (e == null) { return BadRequest(); }
             if (!ModelState.IsValid) { return BadRequest(); }
-            GenericRepos.Add(e);// Add new employee to the repository
-            GenericRepos.Save();  
+
+            //GenericRepos.Add(e);// Add new employee to the repository
+            //GenericRepos.Save();  
             
+            _unit._employeerepo.Add(e);  // Add new employee to the repository
+            _unit.Save();  // Save changes to the database
 
             //return Created("ayhaga",e);  it location is "ayhaga"
             return CreatedAtAction(nameof(Get), new { SSN = e.SSN },e);  // frist 2 parmeters to create the IRL so ots location is "https://localhost:7163/api/Employee/5544"
@@ -112,16 +125,26 @@ namespace APIs_Faundamentals.Controllers
             if (!ModelState.IsValid) { return BadRequest(); }
             if (e == null) { return BadRequest(); }
             if (e.SSN != SSN ) { return BadRequest(); }
-            GenericRepos.Update(e); // Update existing employee in the repository
-             GenericRepos.Save();  
+
+
+            //GenericRepos.Update(e); // Update existing employee in the repository
+            // GenericRepos.Save();  
+
+            _unit._employeerepo.Update(e);  // Update existing employee in the repository
+            _unit.Save();  // Save changes to the database
+
             return NoContent();
         }
 
         [HttpDelete("{SSN}")]
         public ActionResult Delete(int SSN) {
            
-         GenericRepos.Delete(SSN);  // Delete employee by SSN from the repository
-            GenericRepos.Save();
+         //GenericRepos.Delete(SSN);  // Delete employee by SSN from the repository
+         //   GenericRepos.Save();
+
+            _unit._employeerepo.Delete(SSN);  // Delete employee by SSN from the repository
+            _unit.Save();  // Save changes to the database
+
             return NoContent();  // 204 No Content
         }
     }

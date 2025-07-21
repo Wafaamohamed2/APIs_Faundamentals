@@ -1,6 +1,6 @@
 ﻿namespace APIs_Faundamentals.Repository
 {
-    // Generic repository class for handling data operations for various entities.
+    // Generic repository class for handling data operations for various entities .. to separate data layer 
     public class GenericRepos<TEntity> where TEntity : class
     {
         private readonly Models.PracticContext _context;

@@ -3,7 +3,8 @@ using APIs_Faundamentals.Models;
 using APIs_Faundamentals.Repository;
 using Microsoft.EntityFrameworkCore;
 using APIs_Faundamentals.UnitOfWork;
-
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 namespace APIs_Faundamentals
 {
     public class Program
@@ -67,6 +68,23 @@ namespace APIs_Faundamentals
 
             // Register the UnitWork service for dependency injection
             builder.Services.AddScoped<UnitWork>();
+
+            builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme= "MyScheme")
+                .AddJwtBearer
+                ("MyScheme", option =>
+                {
+                    string secretkey = "Welcome to my app wish you interest with us";
+                    var Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretkey));
+
+                    option.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = Key,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+
+
+                }) ;
 
             var app = builder.Build();
 

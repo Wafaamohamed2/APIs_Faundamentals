@@ -10,10 +10,22 @@ namespace APIs_Faundamentals.Controllers
     [ApiController]
     public class EmpDeptController : ControllerBase
     {
-        UnitOfWork _UnitfWork;
-        public EmpDeptController()
+        private UnitWork _unit;
+        public EmpDeptController(UnitWork unit)
         {
-            
+         
+            _unit = unit;
+        }
+
+        [HttpPost]
+
+        public ActionResult Add(Employee employee)
+        {
+            _unit._departmentrepo.Add(employee.DnoNavigation);
+            _unit._employeerepo.Add(employee);
+
+            _unit.Save();
+            return Ok("Employee and Department added successfully");
         }
     }
 }
