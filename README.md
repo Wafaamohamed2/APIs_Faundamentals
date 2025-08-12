@@ -6,25 +6,25 @@
 
 
 ## Updated Features:
-    - User Registration (/api/Account/Register) with validation and automatic role assignment (User role by default).
-    - User Login (/api/Account/Login) with JWT token generation.
-    - Role Assignment (/api/Account/AssignRole) for assigning roles to existing users.
-    - JWT Authentication configuration with custom token validation parameters.
-    - Secure API endpoints using [Authorize] attributes based on roles.
-    - Extended ApplicationUser model to store additional user details (FirstName, LastName).
-    - AuthModel for unified authentication response.
-    - TokenReqModel for handling login requests.
-    - JWT settings in configuration for issuer, audience, secret key, and token lifetime.
+   - User Registration (/api/Account/Register) with validation and automatic role assignment (User role by default).
+   - User Login (/api/Account/Login) with JWT token generation.
+   - Role Assignment (/api/Account/AssignRole) for assigning roles to existing users.
+   - JWT Authentication configuration with custom token validation parameters.
+   - Secure API endpoints using [Authorize] attributes based on roles.
+   - Extended ApplicationUser model to store additional user details (FirstName, LastName).
+   - AuthModel for unified authentication response.
+   - TokenReqModel for handling login requests.
+   - JWT settings in configuration for issuer, audience, secret key, and token lifetime.
 
 ## Tech Stack:
-    - ASP.NET Core 8.0 – Web API Framework
-    - Entity Framework Core – ORM for database access
-    - SQL Server – Relational database
-    - JWT (JSON Web Tokens) – Authentication
-    - ASP.NET Core Identity – User & Role management
-    - Dependency Injection – Loose coupling
-    - Repository Pattern – Encapsulated data access logic
-    - Unit of Work Pattern – Single transaction management
+   - ASP.NET Core 8.0 – Web API Framework
+   - Entity Framework Core – ORM for database access
+   - SQL Server – Relational database
+   - JWT (JSON Web Tokens) – Authentication
+   - ASP.NET Core Identity – User & Role management
+   - Dependency Injection – Loose coupling
+   - Repository Pattern – Encapsulated data access logic
+   - Unit of Work Pattern – Single transaction management
 
 
  ##  Client Application (WinForms):
@@ -38,8 +38,8 @@
 
           
  ##  Authentication Flow:
-         1. Register → New users are created with User role by default.
-         2. Login → Valid credentials return a JWT token containing username, email, and roles.
-         3. Assign Role → Admin can assign new roles to users.
-         4. Access Protected Endpoints → Token must be provided in the Authorization header.
+   1. Register → New users are created with User role by default.
+   2. Login → Valid credentials return a JWT token containing username, email, and roles.
+   3. Assign Role → Admin can assign new roles to users.
+   4. Access Protected Endpoints → Token must be provided in the Authorization header.
 
