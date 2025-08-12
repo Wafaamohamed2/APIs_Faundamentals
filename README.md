@@ -30,12 +30,11 @@
  ##  Client Application (WinForms):
       The repository also includes a Windows Forms application (App_Consummer) that consumes the updated APIs_Fundamentals Web API.
       
-   # Workflow:
-
-          1. On application load (Form1_Load), the client sends an HTTP GET request to:  https://localhost:7163/api/Employee
-          2. The API returns a JSON list of employees.
-          3. The JSON response is deserialized into a list of EmployeeData objects.
-          4. The data is bound to a DataGridView (DGV_Employees) for display.
+# Workflow:
+  1. On application load (Form1_Load), the client sends an HTTP GET request to:  https://localhost:7163/api/Employee
+  2. The API returns a JSON list of employees.
+  3. The JSON response is deserialized into a list of EmployeeData objects.
+  4. The data is bound to a DataGridView (DGV_Employees) for display.
 
           
  ##  Authentication Flow:
