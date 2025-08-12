@@ -1,0 +1,21 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
+@schema = https
+@hostname = localhost
+@port = 7163
+
+GET {{schema}}://{{hostname}}:{{port}}/api/Employee
+
+
+###
+
+POST {{schema}}://{{hostname}}:{{port}}/api/Employee
+Accept: application/json
+Content-Type : application/json 
+{
+  "id": 111,
+  "fullName": "Yasser Ali",
+  "address": "Cairo",
+  "salary": 30000,
+  "deparetmentNum": 10
+}

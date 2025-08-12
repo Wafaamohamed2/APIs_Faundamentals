@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIs_Faundamentals.Models;
 
 [Table("Employee")]
-public partial class Employee
+public partial class Employee 
 {
     [StringLength(50)]
     public string Fname { get; set; }

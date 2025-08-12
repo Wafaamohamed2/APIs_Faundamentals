@@ -2,11 +2,13 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIs_Faundamentals.Models;
 
-public partial class PracticContext : DbContext
+public partial class PracticContext : IdentityDbContext<ApplicationUser>
 {
     public PracticContext()
     {
@@ -15,7 +17,10 @@ public partial class PracticContext : DbContext
     public PracticContext(DbContextOptions<PracticContext> options)
         : base(options)
     {
+        
     }
+
+   
 
     public virtual DbSet<Department> Departments { get; set; }
 
@@ -33,6 +38,10 @@ public partial class PracticContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        base.OnModelCreating(modelBuilder);
+
+
         modelBuilder.Entity<Department>(entity =>
         {
             entity.Property(e => e.Dnum).ValueGeneratedNever();

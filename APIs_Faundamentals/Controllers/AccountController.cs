@@ -1,6 +1,9 @@
 ﻿using APIs_Faundamentals.DTO;
-using Microsoft.AspNetCore.Authorization;
+using APIs_Faundamentals.Models;
+using APIs_Faundamentals.Services;
+
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,67 +16,86 @@ namespace APIs_Faundamentals.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IAuthoServ _authoServ;
 
-
-        [HttpPost("Login")]
-        public ActionResult Login(UserDataDTO user)
+        public AccountController(IAuthoServ authoServ)
         {
-            if (user.UserName == "admin" && user.Password == "1234")
+            _authoServ = authoServ;
+        }
+
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] UserDataDTO userData)
+        {
+            if (userData == null)
             {
-                #region Create claims
-                List<Claim> userdata = new List<Claim>();
-                userdata.Add(new Claim ("name" , user.UserName ));
-                userdata.Add(new Claim(ClaimTypes.MobilePhone,"0104679627"));
+                return BadRequest(ModelState);
+            }
 
-                #endregion
-
-                #region Security key
-                string secretkey = "Welcome to my app wish you interest with us";
-                var Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes( secretkey));
-
-
-                var signcer = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256);
-
-                #endregion
-
-
-                #region create token
-                // header type ,algo
-                //payload claims , expiration
-                //signature => hash secret key +...
-
-                var token = new JwtSecurityToken(
-                    claims: userdata,
-                    expires: DateTime.Now.AddDays(1),
-                    signingCredentials: signcer
-                    
-                );
-
-                var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-
-
-
-                #endregion
-
-                return Ok(stringToken);
+            var result = await _authoServ.RegisterAsync(userData);
+            if (result.IsAuthenticated)
+            {
+                return Ok(result);
             }
             else
             {
-                return Unauthorized("Invalid credentials");
+                return BadRequest(result.Message);
             }
-          
         }
 
-        [HttpGet]
-        [Authorize]
-        public ActionResult GetAll()
+
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] TokenReqModel tokenReq)
         {
+            Console.WriteLine($"Email from request: '{tokenReq.Email}'");
+            Console.WriteLine($"Password from request: '{tokenReq.Password}'");
+
+            if (tokenReq == null || string.IsNullOrEmpty(tokenReq.Email) || string.IsNullOrEmpty(tokenReq.Password))
+            {
+                return BadRequest("Invalid login request");
+            }
+
+            
 
 
-            return Ok();
+            var result = await _authoServ.GetTokenAsync(tokenReq);
+            if (result.IsAuthenticated)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+
+
+    
         }
 
-      
+
+        [HttpPost("AssignRole")]
+
+        public async Task<IActionResult> AssignRole(RoleModel roleModel)
+        {
+            if (roleModel == null || string.IsNullOrEmpty(roleModel.Id) || string.IsNullOrEmpty(roleModel.Role))
+            {
+                return BadRequest("Invalid role assignment request");
+            }
+
+            var result = await _authoServ.AssignRoleAsync(roleModel);
+            if (result != null)
+            {
+                return Ok(result); 
+            }
+            else
+            {
+                return BadRequest("Role assignment failed");
+            }
+        }
+
+
+       
+
     }
 }

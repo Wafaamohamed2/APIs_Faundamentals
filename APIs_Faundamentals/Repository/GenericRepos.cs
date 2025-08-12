@@ -1,4 +1,6 @@
-﻿namespace APIs_Faundamentals.Repository
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace APIs_Faundamentals.Repository
 {
     // Generic repository class for handling data operations for various entities .. to separate data layer 
     public class GenericRepos<TEntity> where TEntity : class
@@ -11,6 +13,8 @@
         }
       public List<TEntity> SelectAll()
       {
+
+
            return _context.Set<TEntity>().ToList();
 
       }
@@ -20,6 +24,14 @@
             return _context.Set<TEntity>().Find(id);
       }
       
+
+        public TEntity SelectByName(string name)
+        {
+            
+            // Assuming TEntity has a property called "Name" for demonstration purposes
+            // You may need to adjust this based on your actual entity structure
+            return _context.Set<TEntity>().FirstOrDefault(e => EF.Property<string>(e, "Name") == name)!;
+        }
          public void Add(TEntity entity)
         {
                 _context.Set<TEntity>().Add(entity);
@@ -40,6 +52,8 @@
                 _context.Set<TEntity>().Remove(entity);
             }
         }
+
+
         public void Save()
         {
             _context.SaveChanges();

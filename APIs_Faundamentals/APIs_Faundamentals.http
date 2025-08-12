@@ -1,6 +1,21 @@
-@APIs_Faundamentals_HostAddress = http://localhost:5267
+@APIs_Faundamentals_HostAddress = https://localhost:7163
 
 GET {{APIs_Faundamentals_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+GET {{APIs_Faundamentals_HostAddress}}/api/account
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjAxMDQ2Nzk2MjciLCJleHAiOjE3NTQ4OTc1NjN9.bU8MtzRrDVen2YZjlczybu1Us5aUT-xmDLxknKiIQ94
+
+###
+
+POST {{APIs_Faundamentals_HostAddress}}/api/account/Login
+Content-Type: application/json
+
+{
+  "userName": "admin",
+  "password": "1234"
+}
 
 ###

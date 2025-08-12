@@ -15,5 +15,29 @@
             api/Employee/102660
             </remarks>
         </member>
+        <member name="T:APIs_Faundamentals.Migrations.Authantication">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.Authantication.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.Authantication.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.Authantication.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:APIs_Faundamentals.Migrations.SeedRoles">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.SeedRoles.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.SeedRoles.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.SeedRoles.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
