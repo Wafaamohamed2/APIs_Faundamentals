@@ -10,5 +10,11 @@ namespace APIs_Faundamentals.Services
         Task<AuthModel> GetTokenAsync(TokenReqModel tokenReq);
 
         Task<string> AssignRoleAsync(RoleModel roleModel);
+
+        Task<AuthModel> RefreshTokenAsync(string Token);
+
+        Task<bool> RevokeTokenAsync(string Token);
+
+
      }
 }

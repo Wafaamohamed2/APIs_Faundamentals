@@ -10,7 +10,7 @@ namespace APIs_Faundamentals.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-       
+        public List<RefreshToken>? RefreshTokens { get; set; }
 
 
     }

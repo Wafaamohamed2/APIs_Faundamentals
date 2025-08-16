@@ -109,12 +109,13 @@ namespace APIs_Faundamentals
                     {
 
                         ValidateIssuer = true,
-                        ValidateAudience = true, 
-                        ValidateLifetime = true, 
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = builder.Configuration["JWT:Issuer"], // Set the valid issuer from configuration
                         ValidAudience = builder.Configuration["JWT:Audience"], // Set the valid audience from configuration
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])) // Set the signing key from configuration
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])), // Set the signing key from configuration
+                        ClockSkew = TimeSpan.Zero // Disable clock skew for token expiration validation
                     };
 
                 }) ;

@@ -1,4 +1,6 @@
-﻿namespace APIs_Faundamentals.Models
+﻿using System.Text.Json.Serialization;
+
+namespace APIs_Faundamentals.Models
 {
     public class AuthModel
     {
@@ -13,7 +15,11 @@
       
         public string Token { get; set; } = string.Empty;
 
-        public DateTime Expiration { get; set; } = DateTime.Now.AddMinutes(30);
-      
+        //public DateTime Expiration { get; set; } = DateTime.Now.AddMinutes(30);
+
+        [JsonIgnore]
+        public string? RefreshToken { get; set; }
+
+        public DateTime RefreshTokenExpired { get; set; }
     }
 }

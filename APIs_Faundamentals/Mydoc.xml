@@ -39,5 +39,17 @@
         <member name="M:APIs_Faundamentals.Migrations.SeedRoles.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:APIs_Faundamentals.Migrations.RefreshTokens">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.RefreshTokens.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.RefreshTokens.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:APIs_Faundamentals.Migrations.RefreshTokens.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
