@@ -2,19 +2,36 @@
          - This project is a practice implementation of ASP.NET Core Web API that demonstrates Entity Framework Core, 
          Repository Pattern, Generic Repository Pattern, Unit of Work Pattern, and now JWT Authentication with Role Management.
          - It includes full CRUD operations for Employee and Department entities, along with an authentication system
-         supporting user registration, login, and role assignment.
+         supporting user registration, login, role assignment , token refresh, and secure endpoint access.
 
 
-## Updated Features:
-   - User Registration (/api/Account/Register) with validation and automatic role assignment (User role by default).
-   - User Login (/api/Account/Login) with JWT token generation.
-   - Role Assignment (/api/Account/AssignRole) for assigning roles to existing users.
-   - JWT Authentication configuration with custom token validation parameters.
-   - Secure API endpoints using [Authorize] attributes based on roles.
-   - Extended ApplicationUser model to store additional user details (FirstName, LastName).
-   - AuthModel for unified authentication response.
-   - TokenReqModel for handling login requests.
-   - JWT settings in configuration for issuer, audience, secret key, and token lifetime.
+##  Latest Features & Updates:
+   ## 1- Authentication & Security:
+   - JWT Authentication with custom token validation and secure token handling
+   - Refresh Token System with automatic token renewal and revocation 
+   - Role-Based Authorization (Admin, User, HR) with granular permissions
+   - Rate Limiting with different policies for authentication, general, and admin operations
+   - CORS Security with specific origin, method, and header restrictions
+Secure Cookie Manageme
+
+  ## 2- API Endpoints: 
+   - User Registration (/api/Account/Register) with validation and automatic role assignment
+   - User Login (/api/Account/Login) with JWT token generation and refresh token
+   - Token Refresh (/api/Account/RefreshToken) for seamless token renewal
+   - Token Revocation (/api/Account/RevokeToken) for secure logout  
+   - Role Assignment (/api/Account/AssignRole) with admin-only access
+   - User Profile (/api/Account/Profile) to get current user information
+   - Employee Management with role-based access control
+   - Department Management with comprehensive data transfer objects (DTOs)
+
+ ## 3- Security Enhancements:
+   - Authorization Policies for different access levels
+   - Input Sanitization and validation
+   - Error Handling with secure error responses
+   - Logging Integration ready for monitoring
+   - Rate Limiting to prevent abuse and DDoS attacks
+
+    
 
 ## Tech Stack:
    - ASP.NET Core 8.0 – Web API Framework
@@ -22,6 +39,8 @@
    - SQL Server – Relational database
    - JWT (JSON Web Tokens) – Authentication
    - ASP.NET Core Identity – User & Role management
+   - Serilog – Structured logging (configured)
+   - Rate Limiting – Built-in ASP.NET Core rate limiting
    - Dependency Injection – Loose coupling
    - Repository Pattern – Encapsulated data access logic
    - Unit of Work Pattern – Single transaction management
