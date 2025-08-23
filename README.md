@@ -58,7 +58,26 @@ Secure Cookie Manageme
           
  ##  Authentication Flow:
    1. Register → New users are created with User role by default.
-   2. Login → Valid credentials return a JWT token containing username, email, and roles.
-   3. Assign Role → Admin can assign new roles to users.
-   4. Access Protected Endpoints → Token must be provided in the Authorization header.
+   2. Login → Response includes: (JWT Access Token , Refresh Token (HttpOnly Cookie) ,User information and roles).
+   3. Token Refresh (Automatic): Uses refresh token from secure cookie to get new access token.
+   4. Assign Role(Admin Only) → Admin can assign new roles to users.
+   5. Secure API Access → Token must be provided in the Authorization header.
 
+
+ ##  Security Features:
+
+   ## 1. Rate Limiting Policies:
+   - Authentication Policy: 10 requests/minute for login/register
+   - General Policy: 100 requests/minute for regular operations
+   - Admin Policy: 20 requests/minute for admin operations
+   - Global Limiter: 200 requests/minute per user
+
+   ## 2. Authorization Policies:
+   - AdminOnly: Requires Admin role
+   - UserOnly: Requires User role
+   - SuperAdminOnly: Requires super_admin claim
+   - CanManageEmployees: Admin or HR roles
+   - ReadOnlyAccess: Admin, HR, or User roles
+
+
+ 
