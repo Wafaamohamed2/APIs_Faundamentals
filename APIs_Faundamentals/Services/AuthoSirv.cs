@@ -32,11 +32,11 @@ namespace APIs_Faundamentals.Services
 
         public async Task<string> AssignRoleAsync(RoleModel roleModel)
         {
-           var user = await userManager.FindByIdAsync(roleModel.Id);
+           var user = await userManager.FindByEmailAsync(roleModel.Email);
 
             if (user == null || !await roleManager.RoleExistsAsync(roleModel.Role))
             {
-                return "Invallied User ID or Role";
+                return "Invallied User Email or Role";
             }
 
             if (await userManager.IsInRoleAsync(user, roleModel.Role))
@@ -53,8 +53,10 @@ namespace APIs_Faundamentals.Services
      public async Task<AuthModel> RefreshTokenAsync(string Token)
         {
            var authmodel = new AuthModel();
-
+            // Find the user associated with the provided refresh token
             var user = await userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == Token));
+
+
             // Check if user exists and token is valid
             if (user == null) {
 
@@ -73,13 +75,17 @@ namespace APIs_Faundamentals.Services
                 return authmodel;
             }
 
-            
+            // to revoke the token and generate a new one
             refreshToken.RevokeedOn = DateTime.UtcNow;
-            var newRefreshToken = GenerateRefreshToken();
-            
+
+
+            // Update the user with the revoked token
+            var newRefreshToken = GenerateRefreshToken();  
             user.RefreshTokens.Add(newRefreshToken);
             await userManager.UpdateAsync(user);
 
+
+            // Create a new JWT token for the user
             var jwtToken = await CraetejwtToken(user);
             authmodel.IsAuthenticated = true;
             authmodel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -118,6 +124,8 @@ namespace APIs_Faundamentals.Services
            // authmodel.Expiration = token.ValidTo;
             authmodel.Message = "User logged in successfully";
 
+
+            // Check if user has an active refresh token, if not generate a new one
             if (user.RefreshTokens.Any(t =>t.IsAtive)) {
             
               var activRefreshToken = user.RefreshTokens.FirstOrDefault(t => t.IsAtive);
@@ -186,6 +194,10 @@ namespace APIs_Faundamentals.Services
 
             var token = await CraetejwtToken(user);
 
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshTokens.Add(refreshToken);
+            await userManager.UpdateAsync(user);
+
             return new AuthModel
             {
                 Message = "User registered successfully",
@@ -195,6 +207,8 @@ namespace APIs_Faundamentals.Services
                 Roles = new List<string> { "User"},
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 //Expiration = token.ValidTo
+                RefreshToken = refreshToken.Token,
+                RefreshTokenExpired = refreshToken.ExpireOn
             };
 
         }
@@ -203,6 +217,7 @@ namespace APIs_Faundamentals.Services
 
         private async Task<JwtSecurityToken> CraetejwtToken(ApplicationUser user)
         {
+            // Get user claims and roles
             var userClaims = await userManager.GetClaimsAsync(user);
             var roles = await userManager.GetRolesAsync(user);
             var rolesClaim = new List<Claim>();
@@ -212,6 +227,8 @@ namespace APIs_Faundamentals.Services
                   rolesClaim.Add(new Claim("roles" , role));
             }
 
+
+            // Create a list of claims including user claims and roles
             var claims = new[]
             {
 
@@ -224,9 +241,11 @@ namespace APIs_Faundamentals.Services
             .Union(rolesClaim)
             .Union(userClaims);
 
+            // Create signing credentials using the symmetric security key and HMAC SHA256 algorithm
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
+            // Create the JWT token with issuer, audience, claims, expiration time, and signing credentials
             var token = new JwtSecurityToken(
                 issuer: _jwt.Issuer,
                 audience: _jwt.Audience,
@@ -259,6 +278,7 @@ namespace APIs_Faundamentals.Services
 
         }
 
+        // Revoke the refresh token by setting its RevokeedOn property to the current time to avoid further use
         public async Task<bool> RevokeTokenAsync(string Token)
         {
             var user = await userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == Token));
@@ -275,5 +295,7 @@ namespace APIs_Faundamentals.Services
 
             return true;
         }
+
+    
     }
 }

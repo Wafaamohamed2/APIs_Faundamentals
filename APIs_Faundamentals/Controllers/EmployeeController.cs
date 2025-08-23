@@ -6,11 +6,14 @@ using System.Collections.Generic;
 using APIs_Faundamentals.Repository;
 using APIs_Faundamentals.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace APIs_Faundamentals.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmployeeController : ControllerBase
     {
         //IEmployeeRepos _employeeRepos;  // dependence inversion principle, to avoid tight coupling with the repository
@@ -79,10 +82,18 @@ namespace APIs_Faundamentals.Controllers
         [HttpGet("{SSN}")]
         [ProducesResponseType<EmployeeDTO>(200)]
         [ProducesResponseType(404)]  // NotFound
+        [ProducesResponseType(403)]  // Forbidden for unauthorized access
         public ActionResult Get(int SSN)   // ActionResult allow to return Statuse code cases
         {
 
          /*  Employee employee=  GenericRepos.SelectById(SSN);*/  // Get specific employee by SSN from the repository
+
+
+            if(!IsAuthorizedToAccessEmployee(SSN))  // Check if the user is authenticated
+            {
+                return Forbid("You are not authorized to access this employee's data");  // 403 Forbidden
+            }
+
 
             Employee employee = _unit.EmployeeRepository.SelectById(SSN);  // Get specific employee by SSN from the repository
             if (employee == null)
@@ -107,8 +118,10 @@ namespace APIs_Faundamentals.Controllers
 
         }
 
-        [HttpPost
-            ]
+
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(EmployeeDTO e) {
 
             if (e == null) { return BadRequest(); }
@@ -133,6 +146,9 @@ namespace APIs_Faundamentals.Controllers
 
         }
 
+
+
+
         [HttpPut("{SSN}")]
         [Authorize(Roles ="Admin")]
         public ActionResult Edit(EmployeeDTO e , int SSN) {
@@ -145,30 +161,49 @@ namespace APIs_Faundamentals.Controllers
             //GenericRepos.Update(e); // Update existing employee in the repository
             // GenericRepos.Save();  
 
+
+            if (!IsAuthorizedToModifyEmployee(SSN) )
+            {
+                // Check if the user is authenticated
+                return Forbid("You are not authorized to update this employee's data.");
+            }
+
+
             var employee = _unit.EmployeeRepository.SelectById(SSN);
             if (employee == null)
                 return NotFound($"Employee with SSN {SSN} not found.");
 
 
-            var names = e.FullName?.Split(' ') ?? new string[] { "Unknown", "" };
-            employee.Fname = names[0];
-            employee.Lname = names.Length > 1 ? string.Join(" ", names.Skip(1)) : "";
+
+            // Admins only can update these fields
+            if (User.IsInRole("Admin")) {
+
+                var names = e.FullName?.Split(' ') ?? new string[] { "Unknown", "" };
+                employee.Fname = names[0];
+                employee.Lname = names.Length > 1 ? string.Join(" ", names.Skip(1)) : "";
 
 
-            employee.Salary = e.Salary ;
-            employee.Address = e.Address;
+                employee.Salary = e.Salary;
+                employee.Address = e.Address;
 
-            var department = _unit.DepartmentRepository.SelectById(e.DeparetmentNum);
-            if (department == null)
-                return BadRequest("Invalid department number.");
+                var department = _unit.DepartmentRepository.SelectById(e.DeparetmentNum);
+                if (department == null)
+                    return BadRequest("Invalid department number.");
 
-            employee.Dno = department.Dnum;
+                employee.Dno = department.Dnum;
+
+            }
+
+          
 
             _unit._employeerepo.Update(employee);  // Update existing employee in the repository
             _unit.Save();  // Save changes to the database
 
             return NoContent();
         }
+
+
+
 
         [HttpDelete("{SSN}")]
         [Authorize(Roles = "Admin")]
@@ -182,5 +217,48 @@ namespace APIs_Faundamentals.Controllers
 
             return NoContent();  // 204 No Content
         }
+
+
+
+        #region Authorization Helpers
+        private bool IsAuthorizedToAccessEmployee(int employeeSSN)
+        {
+            // Admin can access all employees
+            if (User.IsInRole("Admin"))
+                return true;
+
+            // Regular users can only access their own employee record
+            var currentUserEmployeeId = GetCurrentUserEmployeeId();
+            return currentUserEmployeeId == employeeSSN;
+        }
+
+        private bool IsAuthorizedToModifyEmployee(int employeeSSN)
+        {
+            // Admin can modify all employees
+            if (User.IsInRole("Admin"))
+                return true;
+
+            // Regular users can only modify their own record
+            var currentUserEmployeeId = GetCurrentUserEmployeeId();
+            return currentUserEmployeeId == employeeSSN;
+        }
+
+        private int GetCurrentUserEmployeeId()
+        {
+           
+            var uid = User.FindFirst("uid")?.Value
+                 ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                 ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+
+            if (string.IsNullOrEmpty(uid))
+                return 0;
+
+            var emp = _unit.EmployeeRepository.SelectById(int.Parse(uid));
+            if (emp == null)
+                return 0;
+            return emp.SSN;
+        }
+
+        #endregion
     }
 }

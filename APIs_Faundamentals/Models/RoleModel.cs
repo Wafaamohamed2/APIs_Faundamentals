@@ -6,7 +6,7 @@ namespace APIs_Faundamentals.Models
     {
         [Required]
 
-        public string Id { get; set; }
+        public string Email { get; set; }
 
         [Required, StringLength(256)]
         public string Role { get; set; } = string.Empty;
